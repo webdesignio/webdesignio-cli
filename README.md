@@ -1,0 +1,15 @@
+# webdesignio-cli
+
+This is the repository of the command line interface for webdesignio. It's currently WIP. This
+README is future wish, for what is coming. Checkout the issues and the milestones to keep up with
+the progress.
+
+## Usage
+
+```
+wdio <command> [options] [args]
+
+Commands:
+deploy  Deploy a given directory to a cluster
+login   Login to a web-design.io cluster
+```
