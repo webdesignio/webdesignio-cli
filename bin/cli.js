@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const fs = require('fs')
 const chalk = require('chalk')
 const yargs = require('yargs')
 
@@ -22,9 +23,13 @@ if (!command) {
   yargs.showHelp()
   process.exit(1)
 }
-command(argv, done)
+const ctx = { argv, rc: {} }
+if (fs.existsSync('.wdiorc.json')) {
+  ctx.rc = require(`${process.cwd()}/.wdiorc.json`)
+}
+command(ctx, done)
 
-function done (err) {
+function done (err, msg) {
   if (err) {
     if (err.name !== 'UserError') throw err
     console.log('  ' + chalk.red(chalk.bold('⚠  [Error]  ') + err.message))
@@ -34,5 +39,9 @@ function done (err) {
     console.log('    > ' + chalk.cyan.underline('https://github.com/webdesignio/webdesignio-cli'))
     console.log()
     process.exit(1)
+  }
+  if (msg) {
+    console.log('    ' + chalk.green.bold('✓ ') + msg)
+    console.log()
   }
 }
