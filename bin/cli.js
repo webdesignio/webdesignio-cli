@@ -31,7 +31,6 @@ command(ctx, done)
 
 function done (err, msg) {
   if (err) {
-    if (err.name !== 'UserError') throw err
     console.log('  ' + chalk.red(chalk.bold('⚠  [Error]  ') + err.message))
     console.log()
     console.log('    > Something went wrong, check the errors above and try again.')
