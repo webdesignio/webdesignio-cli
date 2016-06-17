@@ -13,8 +13,9 @@ console.log()
 
 const argv = yargs
   .usage('    $0 <command> [options] [args]')
-  .command('deploy', 'Deploy a given directory to a cluster')
+  .command('deploy', 'Deploy the current website to a cluster')
   .command('login', 'Login to a web-design.io cluster')
+  .command('build', 'Build the current website')
   .demand(1)
   .argv
 

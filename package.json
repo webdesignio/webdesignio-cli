@@ -17,6 +17,7 @@
     "ora": "^0.2.3",
     "read": "^1.0.7",
     "request-then": "^1.1.0",
+    "shelljs": "^0.7.0",
     "to-pascal-case": "^1.0.0",
     "yargs": "^4.7.1"
   },
