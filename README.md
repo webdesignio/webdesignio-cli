@@ -10,6 +10,7 @@ the progress.
 wdio <command> [options] [args]
 
 Commands:
-deploy  Deploy a given directory to a cluster
+deploy  Deploy the current website to a cluster
 login   Login to a web-design.io cluster
+build   Build the current website
 ```
