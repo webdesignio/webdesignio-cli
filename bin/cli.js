@@ -16,6 +16,7 @@ const argv = yargs
   .command('deploy', 'Deploy the current website to a cluster')
   .command('login', 'Login to a web-design.io cluster')
   .command('build', 'Build the current website')
+  .command('init', 'Initialize a new website')
   .demand(1)
   .argv
 
