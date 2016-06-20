@@ -16,9 +16,11 @@
     "chalk": "^1.1.3",
     "ora": "^0.2.3",
     "read": "^1.0.7",
+    "request": "^2.72.0",
     "request-then": "^1.1.0",
     "shelljs": "^0.7.0",
     "to-pascal-case": "^1.0.0",
+    "unzip": "^0.1.11",
     "yargs": "^4.7.1"
   },
   "devDependencies": {
