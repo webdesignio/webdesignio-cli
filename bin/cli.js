@@ -26,8 +26,8 @@ if (!command) {
   process.exit(1)
 }
 const ctx = { argv, rc: {} }
-if (fs.existsSync('.wdiorc.json')) {
-  ctx.rc = require(`${process.cwd()}/.wdiorc.json`)
+if (fs.existsSync('.webdesigniorc.json')) {
+  ctx.rc = require(`${process.cwd()}/.webdesigniorc.json`)
 }
 command(ctx, done)
 

@@ -7,7 +7,7 @@ the progress.
 ## Usage
 
 ```
-wdio <command> [options] [args]
+webdesignio <command> [options] [args]
 
 Commands:
   deploy  Deploy the current website to a cluster
