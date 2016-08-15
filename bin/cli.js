@@ -17,6 +17,7 @@ const argv = yargs
   .command('login', 'Login to a web-design.io cluster')
   .command('build', 'Build the current website')
   .command('init', 'Initialize a new website')
+  .command('trigger-build', 'Trigger a build job for the website')
   .demand(1)
   .argv
 
