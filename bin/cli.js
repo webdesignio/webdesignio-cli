@@ -18,6 +18,7 @@ const argv = yargs
   .command('build', 'Build the current website')
   .command('init', 'Initialize a new website')
   .command('trigger-build', 'Trigger a build job for the website')
+  .command('push', 'Push local data to the cluster')
   .demand(1)
   .argv
 

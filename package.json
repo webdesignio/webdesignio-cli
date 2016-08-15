@@ -30,7 +30,8 @@
     "to-pascal-case": "^1.0.0",
     "unzip": "^0.1.11",
     "yargs": "^4.7.1",
-    "yazl": "^2.4.1"
+    "yazl": "^2.4.1",
+    "yn": "^1.2.0"
   },
   "devDependencies": {
     "standard": "^7.1.2"
