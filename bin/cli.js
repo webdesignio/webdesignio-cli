@@ -31,7 +31,10 @@ const ctx = { argv, rc: {} }
 if (fs.existsSync('.webdesigniorc.json')) {
   ctx.rc = require(`${process.cwd()}/.webdesigniorc.json`)
 }
-command(ctx, done)
+const maybePromise = command(ctx, done)
+if (maybePromise && (typeof maybePromise.then) === 'function') {
+  maybePromise.then(msg => done(null, msg), err => done(err))
+}
 
 function done (err, msg) {
   if (err) {
