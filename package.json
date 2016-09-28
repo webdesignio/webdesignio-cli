@@ -1,6 +1,6 @@
 {
   "name": "@webdesignio/cli",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "webdesignio's glorious command line interface",
   "main": "index.js",
   "scripts": {
