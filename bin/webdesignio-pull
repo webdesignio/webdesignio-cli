@@ -1,0 +1,108 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const { join } = require('path')
+const { readFile, writeFile } = require('fs')
+const mkdirp = require('mkdirp')
+const Bluebird = require('bluebird')
+const fetch = require('node-fetch')
+const co = require('co')
+const ora = require('ora')
+const chalk = require('chalk')
+const minimist = require('minimist')
+
+const readFileAsync = Bluebird.promisify(readFile)
+const writeFileAsync = Bluebird.promisify(writeFile)
+const mkdirpAsync = Bluebird.promisify(mkdirp)
+const spinner = ora({ spinner: 'arrow3', text: 'Warming up' }).start()
+const argv = minimist(process.argv.slice(2))
+process.on('unhandledRejection', err => { throw err })
+co(main)
+  .catch(err => {
+    spinner.stop()
+    if (typeof err === 'string') {
+      console.log('  ' + chalk.red(chalk.bold('⚠  [Error]  ') + err))
+      console.log()
+      console.log('    > Something went wrong, check the errors above and try again.')
+      console.log('    > Let us know, if you know a better error message.')
+      console.log('    > ' + chalk.cyan.underline('https://github.com/webdesignio/webdesignio-cli'))
+      console.log()
+    } else {
+      throw err
+    }
+  })
+
+const unpackResponse = co.wrap(function * unpackResponse (res) {
+  if ((res.status / 100 | 0) !== 2) throw ((yield res.text()) || res.statusText)
+  else return yield res.json()
+})
+
+function * main () {
+  const { prefix = 'data' } = argv
+  let rc
+  spinner.text = 'Reading rc'
+  try {
+    rc = JSON.parse(yield readFileAsync('.webdesigniorc.json', 'utf-8'))
+  } catch (e) { throw String('Unable to read webdesigniorc') }
+  const { url, id: websiteID, token } = rc
+  spinner.text = 'Pulling pages'
+  const pagesRes = yield fetch(`${url}/api/v2/websites/${websiteID}/pages`, {
+    headers: {
+      authorization: `Bearer ${token}`
+    }
+  })
+  const pages = yield unpackResponse(pagesRes)
+  spinner.text = 'Saving pages'
+  yield mkdirpAsync(join(prefix, 'pages'))
+  yield Promise.all(
+    [].concat(
+      pages.map(page => {
+        const o = Object.assign({}, page, { _id: page.name })
+        return writeFileAsync(
+          join(prefix, 'pages', page.name + '.json'),
+          JSON.stringify(o, null, 2)
+        )
+      })
+    )
+  )
+  spinner.text = 'Pulling objects'
+  const objectsRes = yield fetch(`${url}/api/v2/websites/${websiteID}/objects`, {
+    headers: {
+      authorization: `Bearer ${token}`
+    }
+  })
+  const objects = yield unpackResponse(objectsRes)
+  spinner.text = 'Saving objects'
+  yield mkdirpAsync(join(prefix, 'objects'))
+  yield Promise.all(
+    [].concat(
+      objects.map(object => {
+        return writeFileAsync(
+          join(prefix, 'objects', object._id + '.json'),
+          JSON.stringify(object, null, 2)
+        )
+      })
+    )
+  )
+  spinner.text = 'Pulling website'
+  const websiteRes = yield fetch(`${url}/api/v2/websites/${websiteID}`, {
+    headers: {
+      authorization: `Bearer ${token}`
+    }
+  })
+  const website = yield unpackResponse(websiteRes)
+  delete website.config
+  spinner.text = 'Saving website'
+  yield writeFileAsync(
+    join(prefix, 'website.json'),
+    JSON.stringify(website, null, 2)
+  )
+  spinner.stop()
+  console.log(
+    '    ' +
+    chalk.green.bold('✓ ') +
+    `Successfully pulled the website-data to ${chalk.cyan(`\`./${prefix}\``)}`
+  )
+  console.log()
+}
